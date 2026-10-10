@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" class="dark">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Browse, search and tag the media in your Telegram chats."
+        />
+
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon-96x96.png" type="image/png" sizes="96x96" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+        <meta name="apple-mobile-web-app-title" content="Mediagram" />
+
+        <!--
+            Applies the stored theme before the first paint. Without it the page
+            renders dark, React mounts, next-themes reads localStorage, and a
+            light-theme viewer gets a black flash on every launch. Kept inline
+            and un-bundled on purpose: a deferred module is far too late.
+
+            The key, the values and the fallback all mirror the ThemeProvider in
+            src/layouts/app-shell.tsx. Change one, change the other.
+        -->
+        <script>
+            (function () {
+                try {
+                    var stored = localStorage.getItem('theme');
+                    var theme =
+                        stored === 'light' || stored === 'dark'
+                            ? stored
+                            : stored === 'system'
+                              ? window.matchMedia('(prefers-color-scheme: light)').matches
+                                  ? 'light'
+                                  : 'dark'
+                              : 'dark';
+                    document.documentElement.classList.toggle('dark', theme === 'dark');
+                } catch (error) {
+                    // Storage can throw outright in a locked-down browser. The
+                    // dark class is already on <html>, so we simply keep it.
+                }
+            })();
+        </script>
+
+        <title>Mediagram</title>
+    </head>
+    <body class="font-sans antialiased">
+        <div id="app"></div>
+        <script type="module" src="/src/main.tsx"></script>
+    </body>
+</html>

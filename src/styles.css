@@ -1,0 +1,413 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+
+/*
+ * Mediagram's design system, carried over verbatim from the original app.
+ * Fonts (Open Sans + Rubik) are self-hosted through @fontsource (imported in
+ * src/main.tsx), so there is no network request for them at all.
+ */
+
+:root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: var(--brand);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0 0);
+    --sidebar-foreground: oklch(0.145 0 0);
+    --sidebar-primary: oklch(0.205 0 0);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.97 0 0);
+    --sidebar-accent-foreground: oklch(0.205 0 0);
+    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-ring: var(--brand);
+}
+
+.dark {
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: var(--brand);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: var(--brand);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: var(--brand);
+}
+
+/*
+ * The colours that are ours rather than shadcn's.
+ *
+ * Every surface, border and body colour above is still stock, so the theme can
+ * be swapped wholesale. What is added here is one hue — the mark's blue,
+ * #1B92D1 — split into the roles it actually has to play, because a single
+ * mid-luminance blue cannot play all of them and stay readable.
+ *
+ * --brand           the mark itself, and graphics. 3.4:1 on white, 8.1:1 on
+ *                   black — enough for icons and large text, NOT for body copy.
+ * --brand-text      the same blue pushed to AA for links and small type:
+ *                   5.2:1 on white, 10.0:1 on black.
+ * --brand-solid     a filled action. Its foreground flips per theme on
+ *                   purpose: white on a deep blue in light (5.0:1), near-black
+ *                   on a bright blue in dark (8.1:1). Keeping one text colour
+ *                   for both fails one of them, every time.
+ * --brand-subtle    a tinted surface. In dark it sits ABOVE --card in
+ *                   lightness, because --background is pure black there and
+ *                   anything darker than its own page reads as a hole.
+ * --brand-subtle-foreground  secondary text ON that surface, tinted from the
+ *                   same hue rather than dropped to grey (grey lands at 4.3:1
+ *                   on the light tint and fails).
+ *
+ * Measured values are in the comments; keep them true if you retune. Reach for
+ * --primary and --accent for ordinary interface state — brand is for the
+ * places that are meant to be recognisably Mediagram.
+ */
+:root {
+    --brand: oklch(0.629 0.135 239.3); /* #1B92D1, the mark */
+    --brand-text: oklch(0.52 0.15 239.3); /* 5.24:1 on --background */
+    --brand-solid: oklch(0.545 0.148 239.3); /* 4.75:1 on --background */
+    --brand-solid-foreground: oklch(0.985 0 0); /* 4.55:1 on --brand-solid */
+    --brand-solid-hover: oklch(0.49 0.15 239.3); /* 5.67:1 with its label */
+    --brand-subtle: oklch(0.968 0.016 239.3);
+    --brand-subtle-foreground: oklch(0.5 0.055 239.3); /* 5.43:1 on the tint */
+    --brand-border: oklch(0.87 0.055 239.3);
+}
+
+.dark {
+    --brand: oklch(0.72 0.12 239.3); /* 8.11:1 on --background */
+    --brand-text: oklch(0.78 0.105 239.3); /* 10.04:1 on --background */
+    --brand-solid: oklch(0.72 0.12 239.3);
+    --brand-solid-foreground: oklch(0.145 0 0); /* 8.11:1 on --brand-solid */
+    --brand-solid-hover: oklch(0.78 0.105 239.3); /* 10.04:1 with its label */
+    --brand-subtle: oklch(0.27 0.04 239.3); /* above --card, not below it */
+    --brand-subtle-foreground: oklch(
+        0.755 0.045 239.3
+    ); /* 7.24:1 on the tint */
+    --brand-border: oklch(0.4 0.075 239.3);
+}
+
+/*
+ * The bridge from the tokens above to Tailwind's utilities.
+ *
+ * Without this, `bg-accent`, `text-muted-foreground` and `border-border` are
+ * not utilities at all — Tailwind v4 only generates what the theme declares,
+ * and `@apply border-border` in the base layer fails the build outright. Every
+ * entry is shadcn's own name; the --color-brand-* family is the exception, and
+ * it is the mark's blue in its several roles, not a state or a surface.
+ */
+@theme inline {
+    --font-sans: 'Open Sans', sans-serif;
+    --font-display: 'Rubik', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: Georgia, serif;
+    --font-mono: Menlo, monospace;
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-brand: var(--brand);
+    --color-brand-text: var(--brand-text);
+    --color-brand-solid: var(--brand-solid);
+    --color-brand-solid-foreground: var(--brand-solid-foreground);
+    --color-brand-solid-hover: var(--brand-solid-hover);
+    --color-brand-subtle: var(--brand-subtle);
+    --color-brand-subtle-foreground: var(--brand-subtle-foreground);
+    --color-brand-border: var(--brand-border);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+}
+
+html,
+body,
+#app {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    background: var(--background);
+    -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+    font-family: var(--font-display);
+}
+
+/*
+ * The parts of the page a stylesheet does not draw still belong to the design.
+ * Left alone, the selection, the caret and the scrollbar ship whatever the
+ * browser decided, which reads as an assembled page rather than a built one.
+ */
+::selection {
+    background: color-mix(in oklch, var(--brand) 28%, transparent);
+    color: var(--foreground);
+}
+
+html {
+    scrollbar-color: var(--border) transparent;
+}
+
+/*
+ * The landing's nav and its hero CTA both point at anchors further down the
+ * page. Jumping there loses the reader's place; travelling there keeps it.
+ */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border: 2px solid var(--background);
+    border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--brand);
+}
+
+input,
+textarea {
+    caret-color: var(--brand);
+}
+
+/*
+ * The landing diagram's travelling dashes: the one authored motion on that
+ * page, and the thing that makes the media path read as live rather than
+ * drawn. It carries meaning, so it is the only thing moving there.
+ */
+@media (prefers-reduced-motion: no-preference) {
+    .diagram-flow {
+        animation: diagram-flow 1.6s linear infinite;
+    }
+}
+
+@keyframes diagram-flow {
+    from {
+        stroke-dashoffset: 16;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/*
+ * The seal on the phone sign-in.
+ *
+ * Typing a phone number into a site you met ninety seconds ago is the most
+ * exposed moment on this page, so the mark draws itself into a shield there
+ * instead of sitting flat. It is making one claim — the number goes to Telegram
+ * and never to us — and that claim is worth the page's one other moment of
+ * motion.
+ *
+ * It plays once, on arrival, and never repeats. The dash properties live INSIDE
+ * the reduced-motion query on purpose: outside it, an outline set to
+ * `stroke-dashoffset: 1` with no animation to run it down is simply invisible,
+ * so anyone who asked for less movement would get no shield at all.
+ */
+@media (prefers-reduced-motion: no-preference) {
+    .seal-outline {
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+        animation: seal-outline 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .seal-mark {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: seal-mark 520ms cubic-bezier(0.22, 1, 0.36, 1) 440ms both;
+    }
+
+    .seal-ring {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: seal-ring 1200ms ease-out 520ms both;
+    }
+}
+
+@keyframes seal-outline {
+    from {
+        stroke-dashoffset: 1;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes seal-mark {
+    from {
+        opacity: 0;
+        transform: scale(0.62);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes seal-ring {
+    from {
+        opacity: 0.5;
+        transform: scale(0.88);
+    }
+    to {
+        opacity: 0;
+        transform: scale(1.55);
+    }
+}
+
+.pulse-mark {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--brand);
+    animation: pulse-mark 1.2s ease-out infinite;
+}
+
+@keyframes pulse-mark {
+    0%,
+    100% {
+        opacity: 0.35;
+        transform: scale(0.92);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.audio-seek {
+    height: 4px;
+    border-radius: 999px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.audio-seek::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 0 0 2px rgb(0 0 0 / 35%);
+}
+
+.audio-seek::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    border: 0;
+    border-radius: 999px;
+    background: #fff;
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) transparent;
+    }
+    :root {
+        color-scheme: light;
+    }
+    .dark {
+        color-scheme: dark;
+    }
+    body {
+        background-color: var(--background);
+        color: var(--foreground);
+        letter-spacing: var(--tracking-normal);
+    }
+    ::selection {
+        background: color-mix(in oklab, var(--brand) 28%, transparent);
+        color: var(--foreground);
+    }
+    a {
+        color: var(--brand-text);
+        text-underline-offset: 3px;
+    }
+}
