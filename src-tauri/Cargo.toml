@@ -2,9 +2,9 @@
 name = "mediagram"
 version = "0.1.0"
 description = "Browse, search and tag the media in your Telegram chats."
-authors = ["Fermin Villanueva"]
+authors = ["Mediagram"]
 license = ""
-repository = ""
+repository = "https://github.com/try-mediagram/mediagram"
 edition = "2024"
 rust-version = "1.90"
 
