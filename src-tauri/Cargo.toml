@@ -1,6 +1,6 @@
 [package]
 name = "mediagram"
-version = "0.1.1"
+version = "0.1.2"
 description = "Browse, search and tag the media in your Telegram chats."
 authors = ["Mediagram"]
 license = ""
