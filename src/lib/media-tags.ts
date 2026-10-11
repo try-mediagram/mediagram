@@ -1,4 +1,4 @@
-import { db, now, placeholders } from '@/lib/db';
+import { chunked, db, now, placeholders } from '@/lib/db';
 import type { MediaOrder } from '@/lib/telegram/types';
 import type {
     ChatTagCount,
@@ -40,7 +40,7 @@ const CHATS_PER_TAG = 20;
  */
 const PAGE = 18;
 
-/** The most media the chip lookup — and so a bulk tag — will answer for. */
+/** How many ids one chip lookup asks SQLite about at once, and the most one bulk tag will touch. */
 const LOOKUP_LIMIT = 500;
 
 /** How many tags one filter may stack. */
@@ -355,23 +355,29 @@ export async function fetchTagsOn(
     chatId: number,
     messageIds: number[],
 ): Promise<Record<string, MediaItemTag[]>> {
-    const ids = uniqueIds(messageIds).slice(0, LOOKUP_LIMIT);
+    const ids = uniqueIds(messageIds);
     if (ids.length === 0) return {};
 
-    const rows = await (await db()).select<
-        { message_id: number; id: number; name: string }[]
-    >(
-        `SELECT media_tags.message_id AS message_id, tags.id AS id, tags.name AS name
-         FROM media_tags
-         JOIN tags ON tags.id = media_tags.tag_id
-         WHERE media_tags.chat_id = $1
-           AND media_tags.message_id IN (${placeholders(ids.length, 2)})
-         ORDER BY tags.name`,
-        [chatId, ...ids],
+    // In runs rather than capped: a long scroll holds more than one IN list
+    // should carry, and dropping the tail made the newest pages look untagged
+    // — and their favorite button press into nothing.
+    const conn = await db();
+    const runs = await Promise.all(
+        chunked(ids, LOOKUP_LIMIT).map((run) =>
+            conn.select<{ message_id: number; id: number; name: string }[]>(
+                `SELECT media_tags.message_id AS message_id, tags.id AS id, tags.name AS name
+                 FROM media_tags
+                 JOIN tags ON tags.id = media_tags.tag_id
+                 WHERE media_tags.chat_id = $1
+                   AND media_tags.message_id IN (${placeholders(run.length, 2)})
+                 ORDER BY tags.name`,
+                [chatId, ...run],
+            ),
+        ),
     );
 
     const onMedia: Record<string, MediaItemTag[]> = {};
-    for (const row of rows) {
+    for (const row of runs.flat()) {
         (onMedia[String(row.message_id)] ??= []).push({
             id: row.id,
             name: row.name,

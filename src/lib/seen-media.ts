@@ -1,4 +1,4 @@
-import { db, now, placeholders } from '@/lib/db';
+import { chunked, db, now, placeholders } from '@/lib/db';
 
 /**
  * Which media this account has already opened, so the grid can say so and
@@ -14,7 +14,7 @@ export function seenKey(chatId: number) {
     return ['seen-media', chatId] as const;
 }
 
-/** The most ids one lookup answers for, as with the tag chips. */
+/** How many ids one lookup asks SQLite about at once, as with the tag chips. */
 const LOOKUP_LIMIT = 500;
 
 /** Of these message ids, the ones already opened. */
@@ -22,17 +22,22 @@ export async function fetchSeenOn(
     chatId: number,
     messageIds: number[],
 ): Promise<number[]> {
-    const ids = [...new Set(messageIds)]
-        .filter((id) => Number.isInteger(id) && id > 0)
-        .slice(0, LOOKUP_LIMIT);
+    const ids = [...new Set(messageIds)].filter(
+        (id) => Number.isInteger(id) && id > 0,
+    );
     if (ids.length === 0) return [];
 
-    const rows = await (await db()).select<{ message_id: number }[]>(
-        `SELECT message_id FROM seen_media
-         WHERE chat_id = $1 AND message_id IN (${placeholders(ids.length, 2)})`,
-        [chatId, ...ids],
+    const conn = await db();
+    const runs = await Promise.all(
+        chunked(ids, LOOKUP_LIMIT).map((run) =>
+            conn.select<{ message_id: number }[]>(
+                `SELECT message_id FROM seen_media
+                 WHERE chat_id = $1 AND message_id IN (${placeholders(run.length, 2)})`,
+                [chatId, ...run],
+            ),
+        ),
     );
-    return rows.map((row) => row.message_id);
+    return runs.flat().map((row) => row.message_id);
 }
 
 /**

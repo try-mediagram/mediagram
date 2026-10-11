@@ -37,3 +37,16 @@ export function placeholders(count: number, start = 1): string {
 export function now(): string {
     return new Date().toISOString();
 }
+
+/**
+ * Split a list into runs of at most `size`, so a lookup over everything a
+ * grid has loaded stays within SQLite's bound-parameter limit instead of
+ * answering for the first few hundred and silently ignoring the rest.
+ */
+export function chunked<T>(items: T[], size: number): T[][] {
+    const runs: T[][] = [];
+    for (let start = 0; start < items.length; start += size) {
+        runs.push(items.slice(start, start + size));
+    }
+    return runs;
+}
